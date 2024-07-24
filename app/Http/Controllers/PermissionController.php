@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 class PermissionController extends Controller
 {
     public function index(){
-        return view('permissions.list');
+
+        $permissions = Permission::orderBy('created_at','DESC')->paginate(25);
+        return view('permissions.list',compact('permissions'));
     }
 
     public function create(){
@@ -28,12 +30,28 @@ class PermissionController extends Controller
         }
     }
 
-    public function edit(){
-
+    public function edit($id){
+        $permission = Permission::findOrFail($id);
+        return view('permissions.edit',compact('permission'));
     }
 
-    public function update(){
+    public function update($id,Request $data){
 
+        $permission = Permission::findOrFail($id);
+
+        $validator = Validator::make($data->all(),[
+            'name' =>' required|min:3|unique:permissions,name,'.$id.',id'
+        ]);
+
+        if ($validator->passes()) {
+            // Permission::create(['name' => $data->name]);
+            $permission->name =$data->name;
+            $permission->save();
+
+            return redirect()->route('permissions.index')->with('success','Permission updated successfully.');
+        } else{
+            return redirect()->route('permissions.edit',$id)->withInput()->withErrors($validator);
+        }
     }
 
     public function destroy(){
