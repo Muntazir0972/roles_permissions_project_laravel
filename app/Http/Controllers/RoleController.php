@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     public function index(){
-        return view('roles.list');
+
+        $roles= Role::orderBy('name','ASC')->paginate(25);
+        return view('roles.list',compact('roles'));
     }
 
     public function create(){
@@ -25,10 +27,10 @@ class RoleController extends Controller
         ]);
 
         if ($validator->passes()) {
-           $role =  Role::create(['name' => $data->name]);
+           $role = Role::create(['name' => $data->name]);
 
             if (!empty($data->permission)) {
-                foreach ($data as $permission => $name) {
+                foreach ($data->permission as $name) {
                     $role->givePermissionTo($name);
                 }
             }
