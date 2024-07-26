@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class RoleController extends Controller
 {
@@ -80,14 +82,14 @@ class RoleController extends Controller
         $id = $data->id; 
         $role = Role::find($id);
         if ($role == null) {
-        session()->flash('error','Role not found.');
+        Session::flash('error','Role not found.');
             return response()->json([
                 'status' => false,
             ]);
         }
 
         $role->delete();
-        session()->flash('success','Role Deleted Successfully.');
+        Session::flash('success','Role Deleted Successfully.');
         return response()->json([
             'status' => true,
         ]);
