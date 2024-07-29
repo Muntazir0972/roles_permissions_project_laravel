@@ -39,9 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');    
-    // Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');    
-    // Route::post('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');    
-    // Route::delete('/roles', [RoleController::class, 'destroy'])->name('roles.destroy');  
+    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');    
+    Route::post('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');    
+    Route::delete('/tasks', [TaskController::class, 'destroy'])->name('tasks.destroy');  
 
 });
 
