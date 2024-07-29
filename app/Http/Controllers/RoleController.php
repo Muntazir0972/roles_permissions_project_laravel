@@ -93,6 +93,7 @@ class RoleController extends Controller
         return response()->json([
             'status' => true,
         ]);
+        
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -60,7 +61,7 @@ class PermissionController extends Controller
         $permission = Permission::find($id);
 
         if ($permission === null) {
-            session()->flash('error','Permission not found.');
+            Session::flash('error','Permission not found.');
             return response()->json([
                 'status' => false
             ]);
@@ -68,7 +69,7 @@ class PermissionController extends Controller
 
         $permission->delete();
 
-        session()->flash('success','Permission deleted successfully.');
+        Session::flash('success','Permission deleted successfully.');
             return response()->json([
                 'status' => true
             ]);
