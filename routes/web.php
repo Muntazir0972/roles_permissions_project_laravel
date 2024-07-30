@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,6 +43,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');    
     Route::post('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');    
     Route::delete('/tasks', [TaskController::class, 'destroy'])->name('tasks.destroy');  
+
+    
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    // Route::get('/tasks/create', [UserController::class, 'create'])->name('tasks.create');
+    // Route::post('/tasks', [UserController::class, 'store'])->name('tasks.store');    
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');    
+    Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');    
+    // Route::delete('/tasks', [UserController::class, 'destroy'])->name('tasks.destroy');  
 
 });
 
