@@ -7,8 +7,8 @@
             </h2>
 
             @can('create users')
-            <a href="{{ route('users.index') }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white">Create</a>
-            @endcan
+            <a href="{{ route('users.create') }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white">Create</a>
+            @endcan 
             
         </div>
     </x-slot>
@@ -45,7 +45,9 @@
                                 <a href="{{ route('users.edit',$user->id) }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white hover:bg-slate-600">Edit</a>
                                 @endcan
 
-                                {{-- <a href="javascript:void(0)" onclick="deleteRole({{ $role->id }})" class="bg-red-700 text-sm rounded-md px-3 py-2 text-white hover:bg-red-600">Delete</a> --}}
+                                @can('delete users')
+                                <a href="javascript:void(0)" onclick="deleteUser({{ $user->id }})" class="bg-red-700 text-sm rounded-md px-3 py-2 text-white hover:bg-red-600">Delete</a>
+                                @endcan
 
                             </td>
                         </tr>
@@ -76,6 +78,27 @@
                         },
                         success:function(response){
                             window.location.href = "{{ route('roles.index') }}";
+                        }
+                    });
+                }
+            }
+        </script>
+    </x-slot>
+
+    <x-slot name="script">
+        <script type="text/javascript">
+            function deleteUser(id){
+                if (confirm("Are You sure you want to delete?")) {
+                    $.ajax({
+                        url:'{{ route("users.destroy") }}',
+                        type: 'delete',
+                        data:{id:id},
+                        dataType:'json',
+                        headers:{
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'                        
+                        },
+                        success:function(response){
+                            window.location.href = "{{ route('users.index') }}";
                         }
                     });
                 }

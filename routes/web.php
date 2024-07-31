@@ -46,11 +46,11 @@ Route::middleware('auth')->group(function () {
 
     
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    // Route::get('/tasks/create', [UserController::class, 'create'])->name('tasks.create');
-    // Route::post('/tasks', [UserController::class, 'store'])->name('tasks.store');    
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');    
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');    
     Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');    
-    // Route::delete('/tasks', [UserController::class, 'destroy'])->name('tasks.destroy');  
+    Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');  
 
 });
 

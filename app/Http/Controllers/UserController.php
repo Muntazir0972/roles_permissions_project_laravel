@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller implements HasMiddleware
 {
@@ -36,16 +37,36 @@ class UserController extends Controller implements HasMiddleware
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    {   
+        $roles = Role::orderBy('name','ASC')->get();
+        return view('users.create',compact('roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $data)
     {
-        //
+        $validator = Validator::make($data->all(),[
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:5|same:confirm_password',
+            'confirm_password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('users.create')->withInput()->withErrors($validator);
+        }
+
+        $user = new User();
+        $user->name = $data->name;
+        $user->email = $data->email;
+        $user->password = Hash::make($data->password);
+        $user->save();
+
+        $user->syncRoles($data->role);
+
+        return redirect()->route('users.index')->with('success','User added successfully.');   
     }
     /**
      * Show the form for editing the specified resource.
@@ -87,8 +108,21 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $data)
     {
-        //
+        $user = User::find($data->id);
+
+        if ($user == null) {
+            Session::flash('error','User not found');
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
+        $user->delete();
+        Session::flash('success','User deleted successfully');
+            return response()->json([
+                'status' => true
+            ]);
     }
 }
