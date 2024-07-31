@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller implements HasMiddleware
 {
@@ -105,4 +106,28 @@ class TaskController extends Controller implements HasMiddleware
             'status' => true
         ]);
     }
+
+    public function updateStatus(Request $data, $id)
+    {
+        $task = Task::find($id);
+        
+        if (!$task) {
+            Session::flash('error', 'Task not found');
+            return response()->json(['success' => false]);
+        }
+    
+        if (Auth::user()->id == $task->assigned_to) {
+            $task->status = $data->input('status');
+            $task->save();
+            
+            Session::flash('success', 'Status updated successfully');
+            return response()->json(['success' => true]);
+        }
+    
+        Session::flash('error', 'You are not authorized to update this task status');
+        return response()->json(['success' => false]);
+    }
+    
+    
+
 }

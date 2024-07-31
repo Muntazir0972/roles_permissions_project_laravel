@@ -22,7 +22,7 @@
                 <thead class="bg-gray-50">
                     <tr class="border-b">
                         <th class="px-6 py-3 text-left" width="60">#</th>
-                        <th class="px-6 py-3 text-left">Title</th>
+                        <th class="px-6 py-3 text-left" width="150">Title</th>
                         <th class="px-6 py-3 text-left" width="150">Assigned To</th>
                         <th class="px-6 py-3 text-left" width="150">Created</th>
                         <th class="px-6 py-3 text-left" width="150">Due Date</th>
@@ -40,7 +40,19 @@
                             <td class="px-6 py-3 text-left">{{ $task->user->name }}</td>
                             <td class="px-6 py-3 text-left">{{ \Carbon\Carbon::parse($task->created_at)->format('d M,Y') }}</td>
                             <td class="px-6 py-3 text-left">{{ \Carbon\Carbon::parse($task->due_date)->format('d M,Y') }}</td>
-                            <td class="px-6 py-3 text-left">{{ $task->status }}</td>
+
+                            <td class="px-6 py-3 text-left">
+                                @if (Auth::user()->id == $task->assigned_to)
+                                    <select onchange="updateStatus(this, {{ $task->id }})" style="width: 130px" class="bg-white border border-gray-300 rounded px-2 py-1">
+                                        <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>Todo</option>
+                                        <option value="in progress" {{ $task->status == 'in progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    </select>
+                                @else
+                                    <span>{{ ucfirst($task->status) }}</span>
+                                @endif
+                            </td>
+                            
                             <td class="px-6 py-3 text-center">
                                 
                                 @can('edit tasks')
@@ -83,6 +95,33 @@
                     });
                 }
             }
+
+    function updateStatus(selectElement, taskId) {
+    const status = selectElement.value;
+
+    fetch(`/tasks/update-status/${taskId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to the tasks index page after updating the status
+            window.location.href = "{{ route('tasks.index') }}";
+        } else {
+            alert('Failed to update status.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+    });
+}
+
         </script>
     </x-slot>
 </x-app-layout>

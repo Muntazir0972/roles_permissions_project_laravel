@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');    
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');  
 
+
+    Route::post('/tasks/update-status/{id}', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+
 });
 
 require __DIR__.'/auth.php';
