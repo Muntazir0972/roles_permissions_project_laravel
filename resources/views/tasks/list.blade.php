@@ -5,7 +5,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Tasks') }}
             </h2>
+
+            @can('create tasks')
             <a href="{{ route('tasks.create') }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white">Create</a>
+            @endcan
+
         </div>
     </x-slot>
 
@@ -38,9 +42,14 @@
                             <td class="px-6 py-3 text-left">{{ \Carbon\Carbon::parse($task->due_date)->format('d M,Y') }}</td>
                             <td class="px-6 py-3 text-left">{{ $task->status }}</td>
                             <td class="px-6 py-3 text-center">
-                
+                                
+                                @can('edit tasks')
                                 <a href="{{ route('tasks.edit',$task->id) }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white hover:bg-slate-600">Edit</a>
+                                @endcan
+
+                                @can('delete tasks')
                                 <a href="javascript:void(0)" onclick="deleteTask({{ $task->id }})" class="bg-red-700 text-sm rounded-md px-3 py-2 text-white hover:bg-red-600">Delete</a>
+                                @endcan
 
                             </td>
                         </tr>

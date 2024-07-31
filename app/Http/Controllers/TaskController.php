@@ -8,9 +8,21 @@ use App\Models\User;
 use App\Models\Task;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class TaskController extends Controller
+class TaskController extends Controller implements HasMiddleware
 {
+    public static function middleware():array{
+
+        return [
+            new Middleware('permission:view tasks', only:['index']),
+            new Middleware('permission:edit tasks', only:['edit']),
+            new Middleware('permission:create tasks', only:['create']),
+            new Middleware('permission:delete tasks', only:['destroy']),
+        ];
+    }
+
     public function index(){
 
         $tasks = Task::latest()->with('user')->paginate(25);

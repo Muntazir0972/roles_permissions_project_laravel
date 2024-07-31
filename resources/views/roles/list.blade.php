@@ -5,7 +5,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Roles') }}
             </h2>
+
+            @can('create roles')
             <a href="{{ route('roles.create') }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white">Create</a>
+            @endcan
+            
         </div>
     </x-slot>
 
@@ -34,9 +38,14 @@
                             <td class="px-6 py-3 text-left">{{ $role->permissions->pluck('name')->implode(',') }}</td>
                             <td class="px-6 py-3 text-left">{{ \Carbon\Carbon::parse($role->created_at)->format('d M,Y') }}</td>
                             <td class="px-6 py-3 text-center">
-                
+                                
+                                @can('edit roles')
                                 <a href="{{ route('roles.edit',$role->id) }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white hover:bg-slate-600">Edit</a>
+                                @endcan
+
+                                @can('delete roles')
                                 <a href="javascript:void(0)" onclick="deleteRole({{ $role->id }})" class="bg-red-700 text-sm rounded-md px-3 py-2 text-white hover:bg-red-600">Delete</a>
+                                @endcan
 
                             </td>
                         </tr>
