@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TaskAssignEmail;
 
 class TaskController extends Controller implements HasMiddleware
 {
@@ -50,6 +52,20 @@ class TaskController extends Controller implements HasMiddleware
             $task->assigned_to = $data->assigned_to;
             $task->due_date = $data->due_date;
             $task->save();
+
+            $assignedUser = User::find($task->assigned_to);
+
+            if ($assignedUser) {
+                $userEmail = $assignedUser->email;
+                // dd($userEmail); 
+
+                $mailData = [
+                    'userEmail' => $userEmail,
+                    'task' => $task
+                ];
+
+                Mail::to($assignedUser->email)->send(new TaskAssignEmail($mailData));
+            }
 
             return redirect()->route('tasks.index')->with('success','Task assigned successfully.');
 
