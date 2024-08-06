@@ -20,6 +20,7 @@ class TaskController extends Controller implements HasMiddleware
 
         return [
             new Middleware('permission:view tasks', only:['index']),
+            // new Middleware('permission:view own tasks', only:['viewTask']),
             new Middleware('permission:edit tasks', only:['edit']),
             new Middleware('permission:create tasks', only:['create']),
             new Middleware('permission:delete tasks', only:['destroy']),
@@ -32,6 +33,13 @@ class TaskController extends Controller implements HasMiddleware
         return view('tasks.list',compact('tasks'));
     }
 
+    public function viewTask($id){
+
+        $taskInfo = Task::where('id',$id)->first();
+        return view('tasks.singleTask',compact('taskInfo'));
+
+    }
+
     public function create(){
 
         $users = User::all();
@@ -40,10 +48,18 @@ class TaskController extends Controller implements HasMiddleware
 
     public function store(Request $data){
 
-        $validator = Validator::make($data->all(),[
+        $rules = [
+
             'title' => 'required|min:5',
             'assigned_to' => 'required'
-        ]);
+        ];
+
+        if (!empty($data->task_file)) {
+            $rules['task_file'] = 'nullable|mimes:pdf,doc,docx,txt|max:5120';
+        }
+
+        $validator = Validator::make($data->all(),$rules);
+
 
         if ($validator->passes()) {
             $task = new Task();
@@ -52,6 +68,18 @@ class TaskController extends Controller implements HasMiddleware
             $task->assigned_to = $data->assigned_to;
             $task->due_date = $data->due_date;
             $task->save();
+
+
+            //here we will upload file
+            if (!empty($data->task_file)) {
+
+            $file = $data->task_file;
+            $fileName = $file->getClientOriginalName();
+            $file->move(public_path('task_files'),$fileName);
+            $task->file_path = $fileName;
+            $task->save();
+
+            }
 
             $assignedUser = User::find($task->assigned_to);
 
@@ -87,7 +115,8 @@ class TaskController extends Controller implements HasMiddleware
 
         $validator = Validator::make($data->all(),[
             'title' => 'required|min:5',
-            'assigned_to' => 'required'
+            'assigned_to' => 'required',
+            'task_file' => 'nullable|mimes:pdf,doc,docx,txt|max:5120'
         ]);
 
         if ($validator->passes()) {
@@ -96,6 +125,23 @@ class TaskController extends Controller implements HasMiddleware
             $task->description = $data->description;
             $task->assigned_to = $data->assigned_to;
             $task->due_date = $data->due_date;
+
+            // Check if a new file is uploaded
+            if ($data->hasFile('task_file')) {
+                // Delete the old file if it exists
+                if ($task->file_path && file_exists(public_path('task_files/' . $task->file_path))) {
+                    unlink(public_path('task_files/' . $task->file_path));
+                }
+
+                // Upload the new file
+                $file = $data->file('task_file');
+                $fileName = $file->getClientOriginalName();
+                $file->move(public_path('task_files'), $fileName);
+
+                // Update the task with the new file path
+                $task->file_path = $fileName;
+            }
+
             $task->save();
 
             return redirect()->route('tasks.index')->with('success','Task updated successfully.');
@@ -116,7 +162,18 @@ class TaskController extends Controller implements HasMiddleware
             ]);
         }
 
+
+        // Check if the task has an associated file and delete it
+        if ($task->file_path) {
+            $filePath = public_path('task_files/' . $task->file_path);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        // Delete the task from the database
         $task->delete();
+
         Session::flash('success','Task deleted sucessfully.');
         return response()->json([
             'status' => true

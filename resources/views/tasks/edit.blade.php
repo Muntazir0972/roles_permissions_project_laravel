@@ -12,7 +12,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('tasks.update',$task->id) }}" method="POST">
+                    <form action="{{ route('tasks.update',$task->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div>
                             <label for="" class="text-lg font-medium">Title :</label>
@@ -44,6 +44,24 @@
                                 </select>
                                 @error('assigned_to')
                                     <p class="text-red-400 font-medium">This field is required</p>
+                                @enderror
+                            </div>
+
+                            <label for="" class="text-lg font-medium">Task Document:</label>
+                            <div class="my-3">
+                                <!-- Display the existing file name with a download link -->
+                                @if ($task->file_path)
+                                    <div class="mb-2">
+                                        <strong>Current File:</strong>
+                                        <p>{{ $task->file_path }}</p>
+                                    </div>
+                                @endif
+                            
+                                <!-- File input for uploading a new file -->
+                                <input type="file" class="border-gray-700 shadow shadow-sm w-1/2 rounded-lg" name="task_file" id="task_file">
+                                
+                                @error('task_file')
+                                    <p class="text-red-400 font-medium">{{ $message }}</p>
                                 @enderror
                             </div>
 

@@ -13,7 +13,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <x-message />
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('tasks.store') }}" method="POST">
+                    <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div>
                             <label for="" class="text-lg font-medium">Title :</label>
@@ -48,9 +48,17 @@
                                 @enderror
                             </div>
 
+                            <label for="" class="text-lg font-medium">Task Document :</label>
+                            <div class="my-3">
+                                <input type="file" class="border-gray-700 shadow shadow-sm w-1/2 rounded-lg" name="task_file" id="task_file" value="">
+                                @error('task_file')
+                                    <p class="text-red-400 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <label for="" class="text-lg font-medium">Task Due Date :</label>
                             <div class="my-3">
-                                <input type="date" class="border-gray-300 shadow shadow-sm w-1/2 rounded-lg" name="due_date" id="due_date" value="">
+                                <input type="date" class="border-gray-300 shadow shadow-sm w-1/2 rounded-lg form-control" name="due_date" id="due_date" value="">
                                 @error('due_date')
                                     <p class="text-red-400 font-medium">{{ $message }}</p>
                                 @enderror

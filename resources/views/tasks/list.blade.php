@@ -27,7 +27,7 @@
                         <th class="px-6 py-3 text-left" width="150">Created</th>
                         <th class="px-6 py-3 text-left" width="150">Due Date</th>
                         <th class="px-6 py-3 text-left" width="150">Status</th>
-                        <th class="px-6 py-3 text-center" width="180">Action</th>
+                        <th class="px-6 py-3 text-center" width="280">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
@@ -55,6 +55,16 @@
                             
                             <td class="px-6 py-3 text-center">
                                 
+                                @if(Auth::user()->id == $task->assigned_to)
+                                    <a href="{{ route('task.view', $task->id) }}" class="bg-blue-700 text-sm rounded-md px-3 py-2 text-white hover:bg-blue-600">View</a>
+                                @else    
+                                @can('view all tasks')
+                                <a href="{{ route('task.view', $task->id) }}" class="bg-blue-700 text-sm rounded-md px-3 py-2 text-white hover:bg-blue-600">View</a>
+                                @endcan
+                                @endif
+
+
+
                                 @can('edit tasks')
                                 <a href="{{ route('tasks.edit',$task->id) }}" class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white hover:bg-slate-600">Edit</a>
                                 @endcan
@@ -62,6 +72,7 @@
                                 @can('delete tasks')
                                 <a href="javascript:void(0)" onclick="deleteTask({{ $task->id }})" class="bg-red-700 text-sm rounded-md px-3 py-2 text-white hover:bg-red-600">Delete</a>
                                 @endcan
+
 
                             </td>
                         </tr>
