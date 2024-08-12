@@ -60,7 +60,7 @@ class TaskController extends Controller implements HasMiddleware
         ];
 
         if (!empty($data->task_file)) {
-            $rules['task_file'] = 'nullable|mimes:pdf,doc,docx,txt|max:5120';
+            $rules['task_file'] = 'nullable|mimes:pdf,doc,docx,txt,csv|max:5120';
         }
 
         $validator = Validator::make($data->all(),$rules);
