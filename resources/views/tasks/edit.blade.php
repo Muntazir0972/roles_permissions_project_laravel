@@ -58,7 +58,7 @@
                                 @endif
                             
                                 <!-- File input for uploading a new file -->
-                                <input type="file" class="border-gray-700 shadow shadow-sm w-1/2 rounded-lg" name="task_file" id="task_file">
+                                <input type="file" style="border: 1px solid rgb(209 213 219 / var(--tw-border-opacity));" class="border-gray-700 shadow shadow-sm w-1/2 rounded-lg" name="task_file" id="style">
                                 
                                 @error('task_file')
                                     <p class="text-red-400 font-medium">{{ $message }}</p>

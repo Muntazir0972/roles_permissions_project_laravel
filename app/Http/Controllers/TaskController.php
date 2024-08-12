@@ -201,6 +201,12 @@ class TaskController extends Controller implements HasMiddleware
         return response()->json(['success' => false]);
     }
     
-    
+    public function pendingTasks(){
+
+        $user = Auth::user();
+        $pendingTasks = $user->tasks()->where('status',['todo','in progress'])->get();
+        
+        return view('dashboard',compact('pendingTasks'));
+    }
 
 }
