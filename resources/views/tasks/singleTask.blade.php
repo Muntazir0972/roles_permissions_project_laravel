@@ -36,7 +36,7 @@
 
 
                     <div class="mb-4">
-                        <strong>Created At:</strong>
+                        <strong>Assign Date:</strong>
                         <p>{{ \Carbon\Carbon::parse($taskInfo->created_at)->format('d M, Y') }}</p>
                     </div>
 
