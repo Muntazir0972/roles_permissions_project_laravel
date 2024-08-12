@@ -36,6 +36,11 @@ class TaskController extends Controller implements HasMiddleware
     public function viewTask($id){
 
         $taskInfo = Task::where('id',$id)->first();
+
+        if (Auth::user()->id != $taskInfo->assigned_to) {
+            abort(404);
+        }
+
         return view('tasks.singleTask',compact('taskInfo'));
 
     }
