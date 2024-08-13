@@ -25,6 +25,7 @@
                         <th class="px-6 py-3 text-left">Name</th>
                         <th class="px-6 py-3 text-left">Email</th>
                         <th class="px-6 py-3 text-left">Roles</th>
+                        <th class="px-6 py-3 text-left">Status</th>
                         <th class="px-6 py-3 text-left" width="150">Created</th>
                         <th class="px-6 py-3 text-center" width="180">Action</th>
                     </tr>
@@ -38,6 +39,17 @@
                             <td class="px-6 py-3 text-left">{{ $user->name }}</td>
                             <td class="px-6 py-3 text-left">{{ $user->email }}</td>
                             <td class="px-6 py-3 text-left">{{ $user->roles->pluck('name')->implode(', ') }}</td>
+
+                            @can('can change status')
+                            <td class="px-6 py-3 text-left">
+                                @if ($user->status == 1)
+                                    <a href="{{ route('users.changeStatus', ['status' => 0, 'id' => $user->id]) }}" class="bg-blue-700 text-sm rounded-md px-3 py-2 text-white hover:bg-blue-600">Active</a>
+                                @else
+                                    <a href="{{ route('users.changeStatus', ['status' => 1, 'id' => $user->id]) }}" class="bg-yellow-500 font-semibold text-sm rounded-md px-3 py-2 text-white hover:bg-yellow-600">Blocked</a>
+                                @endif
+                            </td>                            
+                            @endcan
+
                             <td class="px-6 py-3 text-left">{{ \Carbon\Carbon::parse($user->created_at)->format('d M,Y') }}</td>
                             <td class="px-6 py-3 text-center">
                                 
@@ -103,6 +115,7 @@
                     });
                 }
             }
+
         </script>
     </x-slot>
 </x-app-layout>

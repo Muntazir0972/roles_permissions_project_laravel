@@ -26,6 +26,13 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        if (Auth::user()->status == 0) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'Your account is blocked.',
+            ]);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));

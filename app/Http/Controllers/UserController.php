@@ -21,6 +21,7 @@ class UserController extends Controller implements HasMiddleware
             new Middleware('permission:edit users', only:['edit']),
             new Middleware('permission:create users', only:['create']),
             new Middleware('permission:delete users', only:['destroy']),
+            new Middleware('permission:can change status', only:['changeStatus']),
         ];
     }
 
@@ -124,5 +125,15 @@ class UserController extends Controller implements HasMiddleware
             return response()->json([
                 'status' => true
             ]);
+    }
+
+    public function changeStatus($status,$id){
+
+        $user = User::find($id);
+        $user->status=$status;
+        $user->save();
+
+    return redirect()->route('users.index')->with('success', 'User status updated successfully.');
+
     }
 }
