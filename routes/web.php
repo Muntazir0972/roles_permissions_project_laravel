@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::get('/dashboard', [TaskController::class, 'pendingTasks'])
+Route::get('/dashboard', [TaskController::class, 'pendingAndCompletedTasks'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
     
@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');    
     Route::delete('/tasks', [TaskController::class, 'destroy'])->name('tasks.destroy');  
     Route::get('/task/{id}', [TaskController::class, 'viewTask'])->name('task.view');  
+    Route::post('/tasks/update-status/{id}', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
 
     
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -61,7 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/changeUserStatus/{status}/{id}', [UserController::class, 'changeStatus'])->name('users.changeStatus');  
 
 
-    Route::post('/tasks/update-status/{id}', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
 
 });
 

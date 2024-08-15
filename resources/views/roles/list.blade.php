@@ -25,7 +25,11 @@
                         <th class="px-6 py-3 text-left">Name</th>
                         <th class="px-6 py-3 text-left">Permissions</th>
                         <th class="px-6 py-3 text-left" width="150">Created</th>
+                        
+                        @can('display roles actions')                            
                         <th class="px-6 py-3 text-center" width="180">Action</th>
+                        @endcan
+
                     </tr>
                 </thead>
                 <tbody class="bg-white">

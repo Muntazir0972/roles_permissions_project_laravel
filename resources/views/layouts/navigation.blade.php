@@ -17,7 +17,7 @@
                     </x-nav-link>
                 </div>  
 
-                @can('view permissions')
+                {{-- @can('view permissions') --}}
                     
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('permissions.index')" :active="request()->routeIs('permissions.index')">
@@ -25,9 +25,9 @@
                     </x-nav-link>
                 </div>
 
-                @endcan
+                {{-- @endcan --}}
 
-                @can('view roles')
+                {{-- @can('view roles') --}}
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')">
@@ -35,7 +35,7 @@
                     </x-nav-link>
                 </div>
 
-                @endcan
+                {{-- @endcan --}}
 
                 @can('view tasks')
 
@@ -47,7 +47,7 @@
 
                 @endcan
 
-                @can('view users')
+                {{-- @can('view users') --}}
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
@@ -56,7 +56,7 @@
                 </div>
             </div>
                     
-            @endcan
+            {{-- @endcan --}}
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

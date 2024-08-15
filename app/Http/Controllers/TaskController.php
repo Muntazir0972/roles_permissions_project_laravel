@@ -37,8 +37,8 @@ class TaskController extends Controller implements HasMiddleware
 
         $taskInfo = Task::where('id',$id)->first();
 
-        if (Auth::user()->id != $taskInfo->assigned_to) {
-            abort(404);
+        if (Auth::user()->id != $taskInfo->assigned_to && !Auth::user()->can('view all tasks')) {
+            abort(404,'You are not authorized to view this task.');
         }
 
         return view('tasks.singleTask',compact('taskInfo'));
@@ -196,6 +196,11 @@ class TaskController extends Controller implements HasMiddleware
     
         if (Auth::user()->id == $task->assigned_to) {
             $task->status = $data->input('status');
+            if ($task->status == 'completed') { // Assuming 'completed' is the status
+                $task->completed_at = now(); // Save the current timestamp
+            } else {
+                $task->completed_at = null; // Reset if not completed
+            }
             $task->save();
             
             Session::flash('success', 'Status updated successfully');
@@ -206,12 +211,14 @@ class TaskController extends Controller implements HasMiddleware
         return response()->json(['success' => false]);
     }
     
-    public function pendingTasks(){
+    public function pendingAndCompletedTasks(){
 
         $user = Auth::user();
         $pendingTasks = $user->tasks()->where('status',['todo','in progress'])->get();
+        $completedTasks = $user->tasks()->where('status',['completed'])->get();
         
-        return view('dashboard',compact('pendingTasks'));
+        return view('dashboard',compact('pendingTasks','completedTasks'));
     }
+
 
 }
