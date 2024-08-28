@@ -1,11 +1,9 @@
 <x-app-layout>
     <style>
-
-       /* Optional: Adjust the width to match the select element */
-       #task_file{
-        border: 1px solid #D1D5DB;
+                /* Optional: Adjust the width to match the select element */
+                #task_file{
+            border: 1px solid #D1D5DB;
         }
-        
     </style>
     <x-slot name="header">
         <div class="flex justify-between">
